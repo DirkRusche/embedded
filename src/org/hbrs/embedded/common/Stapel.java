@@ -1,11 +1,11 @@
-package org.hbrs.embedded;
+package org.hbrs.embedded.common;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
-import org.hbrs.embedded.Karte.Farbe;
-import org.hbrs.embedded.Karte.Typ;
+import org.hbrs.embedded.common.Karte.Farbe;
+import org.hbrs.embedded.common.Karte.Typ;
 
 public class Stapel {
 

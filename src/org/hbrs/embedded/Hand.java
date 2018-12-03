@@ -1,5 +1,7 @@
 package org.hbrs.embedded;
 
+import org.hbrs.embedded.common.Karte;
+
 public class Hand {
 
   Karte karte1;

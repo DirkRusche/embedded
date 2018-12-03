@@ -2,8 +2,9 @@ package org.hbrs.embedded;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.hbrs.embedded.Karte.Farbe;
-import org.hbrs.embedded.Karte.Typ;
+import org.hbrs.embedded.common.Karte;
+import org.hbrs.embedded.common.Karte.Farbe;
+import org.hbrs.embedded.common.Karte.Typ;
 
 public class Helper {
 

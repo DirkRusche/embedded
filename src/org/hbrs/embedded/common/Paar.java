@@ -1,4 +1,4 @@
-package org.hbrs.embedded;
+package org.hbrs.embedded.common;
 
 public class Paar<T, U> {
 
@@ -16,5 +16,13 @@ public class Paar<T, U> {
 
   public U getSecond() {
     return second;
+  }
+
+  public void setFirst(T first) {
+    this.first = first;
+  }
+
+  public void setSecond(U second) {
+    this.second = second;
   }
 }

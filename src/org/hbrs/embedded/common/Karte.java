@@ -1,4 +1,4 @@
-package org.hbrs.embedded;
+package org.hbrs.embedded.common;
 
 import java.util.Objects;
 
