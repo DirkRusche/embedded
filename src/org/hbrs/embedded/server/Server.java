@@ -9,7 +9,9 @@ import org.hbrs.embedded.Spieler;
 
 public class Server implements Runnable {
 
-  List<Spieler> spielerList;
+  private boolean accept = true;
+  private List<Spieler> spielerList;
+  private ServerSocket server;
 
   public Server(List<Spieler> spielerList) {
     this.spielerList = spielerList;
@@ -19,12 +21,16 @@ public class Server implements Runnable {
   @Override
   public void run() {
     try {
-      ServerSocket server = new ServerSocket(1337);
-      List<HandleSocket> sockets = new ArrayList<>();
+      server = new ServerSocket(1337);
 
-      while (true) {
+      while (accept) {
 
         Socket socket = server.accept();
+
+        if (!accept) {
+          socket.close();
+          break;
+        }
 
         RemoteSpieler remoteSpieler = new RemoteSpieler(socket);
         new Thread(remoteSpieler).start();
@@ -33,9 +39,14 @@ public class Server implements Runnable {
 
         System.out.println("added");
       }
+      server.close();
     }
     catch (Exception e) {
-
+      e.printStackTrace();
     }
+  }
+
+  public void stopAccept() {
+    accept = false;
   }
 }

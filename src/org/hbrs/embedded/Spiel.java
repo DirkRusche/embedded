@@ -40,6 +40,8 @@ public class Spiel {
 
   public void start() {
 
+    publish("Spiel beginnt");
+
     initGame();
 
     turn++;
@@ -48,27 +50,29 @@ public class Spiel {
       Spieler spieler = spielerMap.get(turn).getFirst();
       Hand spielerHand = spielerMap.get(turn).getSecond();
 
+      publish(String.format("Spieler %s ist dran", spieler.getName()));
+
       Action action = spieler.getAction(spielerHand.getKarten(), mitte.getKarten());
 
       if (action == Action.CLOSE) {
         if (geschlossen) {
-          publish(String.format("Spieler %s hat geschoben", turn));
+          publish(String.format("Spieler %s hat geschoben", spieler.getName()));
         }
         else {
-          publish(String.format("Spieler %s hat geschlossen", turn));
+          publish(String.format("Spieler %s hat geschlossen", spieler.getName()));
           geschlossen = true;
           letzter = turn;
         }
       }
       else if (action == Action.CHECK) {
-        publish(String.format("Spieler %s hat geschoben", turn));
+        publish(String.format("Spieler %s hat geschoben", spieler.getName()));
         // do nothing
       }
       else if (action == Action.T11) {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte1(),
                 mitte.getKarte1()
             )
@@ -79,7 +83,7 @@ public class Spiel {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte1(),
                 mitte.getKarte2()
             )
@@ -90,7 +94,7 @@ public class Spiel {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte1(),
                 mitte.getKarte3()
             )
@@ -101,7 +105,7 @@ public class Spiel {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte2(),
                 mitte.getKarte1()
             )
@@ -112,7 +116,7 @@ public class Spiel {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte2(),
                 mitte.getKarte2()
             )
@@ -123,7 +127,7 @@ public class Spiel {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte2(),
                 mitte.getKarte3()
             )
@@ -134,7 +138,7 @@ public class Spiel {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte3(),
                 mitte.getKarte1()
             )
@@ -145,7 +149,7 @@ public class Spiel {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte3(),
                 mitte.getKarte2()
             )
@@ -156,7 +160,7 @@ public class Spiel {
         publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
-                turn,
+                spieler.getName(),
                 spielerHand.getKarte3(),
                 mitte.getKarte3()
             )
@@ -204,6 +208,8 @@ public class Spiel {
     Hand spielerHand = spielerMap.get(turn).getSecond();
 
     mitte = new Hand(stapel.getKarte(), stapel.getKarte(), stapel.getKarte());
+
+    publish(String.format("Spieler %s ist dran", spieler.getName()));
 
     Decision entscheidung = spieler.getDecision(spielerHand.getKarten());
 

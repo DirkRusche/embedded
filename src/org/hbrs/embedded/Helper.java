@@ -125,8 +125,11 @@ public class Helper {
     else if (input.equalsIgnoreCase("t32")){
       return Action.T32;
     }
-    else {
+    else if (input.equalsIgnoreCase("t33")){
       return Action.T33;
+    }
+    else {
+      return Action.CHECK;
     }
   }
 }
