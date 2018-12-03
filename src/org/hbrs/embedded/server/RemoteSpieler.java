@@ -13,7 +13,7 @@ import org.hbrs.embedded.Spieler;
 import org.hbrs.embedded.SpielerImpl;
 import org.hbrs.embedded.common.Karte;
 
-public class RemoteSpieler extends SpielerImpl implements Spieler, Runnable, Closeable {
+public class RemoteSpieler extends SpielerImpl implements Runnable, Closeable {
 
   private Socket socket;
 

@@ -4,9 +4,9 @@ import org.hbrs.embedded.common.Karte;
 
 public class Hand {
 
-  Karte karte1;
-  Karte karte2;
-  Karte karte3;
+  private Karte karte1;
+  private Karte karte2;
+  private Karte karte3;
 
   public Hand(Karte karte1, Karte karte2, Karte karte3) {
     this.karte1 = karte1;
