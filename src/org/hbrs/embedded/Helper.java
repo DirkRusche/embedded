@@ -2,6 +2,7 @@ package org.hbrs.embedded;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.hbrs.embedded.Spieler.Action;
 import org.hbrs.embedded.common.Karte;
 import org.hbrs.embedded.common.Karte.Farbe;
 import org.hbrs.embedded.common.Karte.Typ;
@@ -93,4 +94,39 @@ public class Helper {
     return wert;
   }
 
+  public static Action getAction(String input) {
+    if (input.equalsIgnoreCase("close")) {
+      return Action.CLOSE;
+    }
+    else if (input.equalsIgnoreCase("check")){
+      return Action.CHECK;
+    }
+    else if (input.equalsIgnoreCase("t11")){
+      return Action.T11;
+    }
+    else if (input.equalsIgnoreCase("t12")){
+      return Action.T12;
+    }
+    else if (input.equalsIgnoreCase("t13")){
+      return Action.T13;
+    }
+    else if (input.equalsIgnoreCase("t21")){
+      return Action.T21;
+    }
+    else if (input.equalsIgnoreCase("t22")){
+      return Action.T22;
+    }
+    else if (input.equalsIgnoreCase("t23")){
+      return Action.T23;
+    }
+    else if (input.equalsIgnoreCase("t31")){
+      return Action.T31;
+    }
+    else if (input.equalsIgnoreCase("t32")){
+      return Action.T32;
+    }
+    else {
+      return Action.T33;
+    }
+  }
 }

@@ -45,8 +45,6 @@ public class Spiel {
     turn++;
 
     while (!geschlossen || turn != letzter) {
-      System.out.println(turn + " - " + letzter);
-
       Spieler spieler = spielerMap.get(turn).getFirst();
       Hand spielerHand = spielerMap.get(turn).getSecond();
 
@@ -54,20 +52,20 @@ public class Spiel {
 
       if (action == Action.CLOSE) {
         if (geschlossen) {
-          System.out.println(String.format("Spieler %s hat geschoben", turn));
+          publish(String.format("Spieler %s hat geschoben", turn));
         }
         else {
-          System.out.println(String.format("Spieler %s hat geschlossen", turn));
+          publish(String.format("Spieler %s hat geschlossen", turn));
           geschlossen = true;
           letzter = turn;
         }
       }
       else if (action == Action.CHECK) {
-        System.out.println(String.format("Spieler %s hat geschoben", turn));
+        publish(String.format("Spieler %s hat geschoben", turn));
         // do nothing
       }
       else if (action == Action.T11) {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -78,7 +76,7 @@ public class Spiel {
         mitte.setKarte1(spielerHand.setKarte1(mitte.getKarte1()));
       }
       else if (action == Action.T12) {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -89,7 +87,7 @@ public class Spiel {
         mitte.setKarte2(spielerHand.setKarte1(mitte.getKarte2()));
       }
       else if (action == Action.T13) {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -100,7 +98,7 @@ public class Spiel {
         mitte.setKarte3(spielerHand.setKarte1(mitte.getKarte3()));
       }
       else if (action == Action.T21) {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -111,7 +109,7 @@ public class Spiel {
         mitte.setKarte1(spielerHand.setKarte2(mitte.getKarte1()));
       }
       else if (action == Action.T22) {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -122,7 +120,7 @@ public class Spiel {
         mitte.setKarte2(spielerHand.setKarte2(mitte.getKarte2()));
       }
       else if (action == Action.T23) {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -133,7 +131,7 @@ public class Spiel {
         mitte.setKarte3(spielerHand.setKarte2(mitte.getKarte3()));
       }
       else if (action == Action.T31) {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -144,7 +142,7 @@ public class Spiel {
         mitte.setKarte1(spielerHand.setKarte3(mitte.getKarte1()));
       }
       else if (action == Action.T32) {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -155,7 +153,7 @@ public class Spiel {
         mitte.setKarte2(spielerHand.setKarte3(mitte.getKarte2()));
       }
       else {
-        System.out.println(
+        publish(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 turn,
@@ -169,8 +167,8 @@ public class Spiel {
       turn = (turn + 1) % spielerMap.size();
     }
 
-    System.out.println("Runde vorbei");
-    System.out.println("Ermittle Gewinner:");
+    publish("Runde vorbei");
+    publish("Ermittle Gewinner:");
 
     float punkte = 0;
     List<Spieler> gewinner = new ArrayList<>();
@@ -190,9 +188,15 @@ public class Spiel {
       }
     }
 
-    System.out.println(gewinner.toString());
-    System.out.println("Punkte: " + punkte);
+    publish(Arrays.toString(gewinner.toArray()));
+    publish("Punkte: " + punkte);
 
+  }
+  
+  private void publish(String string) {
+    for (Paar<Spieler, Hand> spielerHandPaar : spielerMap.values()) {
+      spielerHandPaar.getFirst().notify(string);
+    }
   }
 
   private void initGame() {

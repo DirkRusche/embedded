@@ -2,23 +2,23 @@ package org.hbrs.embedded;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 import org.hbrs.embedded.server.Server;
 
 public class Main {
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, InterruptedException {
 
-    new Server().start();
+    List<Spieler> spielerList = new ArrayList<>();
 
-  }
+    Server server = new Server(spielerList);
+    new Thread(server).start();
 
-  void nothing() {
+    Thread.sleep(20 * 1000);
 
 
-    Spieler spieler1 = new Mensch("Kevin");
-    Spieler spieler2 = new Mensch("Dirk");
-
-    Spiel spiel = new Spiel(spieler1, spieler2);
+    Spiel spiel = new Spiel(spielerList);
 
     spiel.start();
 

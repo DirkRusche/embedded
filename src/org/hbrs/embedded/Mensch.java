@@ -23,39 +23,7 @@ public class Mensch implements Spieler {
     System.out.println(Arrays.toString(tisch));
     String input = sc.next();
 
-    if (input.equalsIgnoreCase("close")) {
-      return Action.CLOSE;
-    }
-    else if (input.equalsIgnoreCase("check")){
-      return Action.CHECK;
-    }
-    else if (input.equalsIgnoreCase("t11")){
-      return Action.T11;
-    }
-    else if (input.equalsIgnoreCase("t12")){
-      return Action.T12;
-    }
-    else if (input.equalsIgnoreCase("t13")){
-      return Action.T13;
-    }
-    else if (input.equalsIgnoreCase("t21")){
-      return Action.T21;
-    }
-    else if (input.equalsIgnoreCase("t22")){
-      return Action.T22;
-    }
-    else if (input.equalsIgnoreCase("t23")){
-      return Action.T23;
-    }
-    else if (input.equalsIgnoreCase("t31")){
-      return Action.T31;
-    }
-    else if (input.equalsIgnoreCase("t32")){
-      return Action.T32;
-    }
-    else {
-      return Action.T33;
-    }
+    return Helper.getAction(input);
 
   }
 
