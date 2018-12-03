@@ -1,19 +1,17 @@
 package org.hbrs.embedded;
 
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
 import org.hbrs.embedded.common.Karte;
 
 public abstract class SpielerImpl implements Spieler {
 
-  protected Scanner scanner;
-  protected PrintStream outputStream;
+  protected final Scanner scanner;
+  protected final PrintStream outputStream;
 
   public SpielerImpl(InputStream inputStream, OutputStream outputStream) {
     this.scanner = new Scanner(inputStream);

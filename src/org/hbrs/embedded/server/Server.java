@@ -1,22 +1,21 @@
 package org.hbrs.embedded.server;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import org.hbrs.embedded.Spieler;
 
-public class Server implements Runnable {
+public class Server implements Runnable, Closeable {
 
   private boolean accept = true;
-  private List<Spieler> spielerList;
+  private final List<Spieler> spielerList;
   private ServerSocket server;
 
   public Server(List<Spieler> spielerList) {
     this.spielerList = spielerList;
   }
-
 
   @Override
   public void run() {
@@ -33,11 +32,22 @@ public class Server implements Runnable {
         }
 
         RemoteSpieler remoteSpieler = new RemoteSpieler(socket);
-        new Thread(remoteSpieler).start();
+        Thread t = new Thread(remoteSpieler);
+        t.start();
 
-        spielerList.add(remoteSpieler);
+        Thread t2 = new Thread(() -> {
+          try {
+            t.join();
+            spielerList.add(remoteSpieler);
+            System.out.println(String.format("Spieler %s ist gejoint", remoteSpieler.getName()));
+          }
+          catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        });
+        t2.start();
 
-        System.out.println("added");
+
       }
       server.close();
     }
@@ -48,5 +58,10 @@ public class Server implements Runnable {
 
   public void stopAccept() {
     accept = false;
+  }
+
+  @Override
+  public void close() throws IOException {
+    server.close();
   }
 }

@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Karte {
 
-  private Farbe farbe;
-  private Typ typ;
+  private final Farbe farbe;
+  private final Typ typ;
 
   public Karte(Farbe farbe, Typ typ) {
     this.typ = typ;
@@ -39,7 +39,7 @@ public class Karte {
 
   @Override
   public String toString() {
-    return "Karte{" + farbe + " " + typ + "}";
+    return farbe + " " + typ;
   }
 
   public enum Typ {
@@ -50,8 +50,15 @@ public class Karte {
     Typ(int wert) {
       this.wert = wert;
     }
+    public String toString() {
+      return this.name().substring(0, 1).toUpperCase() + this.name().substring(1).toLowerCase();
+    }
   }
   public enum Farbe {
-    KARO, HERZ, PIK, KREUZ
+    KARO, HERZ, PIK, KREUZ;
+
+    public String toString() {
+      return this.name().substring(0, 1).toUpperCase() + this.name().substring(1).toLowerCase();
+    }
   }
 }

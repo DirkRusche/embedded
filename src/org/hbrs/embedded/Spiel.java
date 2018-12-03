@@ -1,11 +1,10 @@
 package org.hbrs.embedded;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.hbrs.embedded.Spieler.Action;
 import org.hbrs.embedded.Spieler.Decision;
 import org.hbrs.embedded.common.Paar;
@@ -18,7 +17,7 @@ public class Spiel {
   private boolean geschlossen = false;
   private int letzter;
 
-  private Map<Integer, Paar<Spieler, Hand>> spielerMap = new HashMap<>();
+  private final Map<Integer, Paar<Spieler, Hand>> spielerMap = new HashMap<>();
   private Hand mitte;
   private Stapel stapel;
 
@@ -41,6 +40,7 @@ public class Spiel {
   public void start() {
 
     publish("Spiel beginnt");
+    publish("");
 
     initGame();
 
@@ -50,157 +50,169 @@ public class Spiel {
       Spieler spieler = spielerMap.get(turn).getFirst();
       Hand spielerHand = spielerMap.get(turn).getSecond();
 
-      publish(String.format("Spieler %s ist dran", spieler.getName()));
+      publishExcept(String.format("Spieler %s ist dran", spieler.getName()), spieler);
 
-      Action action = spieler.getAction(spielerHand.getKarten(), mitte.getKarten());
+      Action action;
+      try {
+        action = spieler.getAction(spielerHand.getKarten(), mitte.getKarten());
+      }
+      catch (Exception e) {
+        action = Action.CHECK;
+      }
 
       if (action == Action.CLOSE) {
         if (geschlossen) {
-          publish(String.format("Spieler %s hat geschoben", spieler.getName()));
+          publishExcept(String.format("Spieler %s hat geschoben", spieler.getName()), spieler);
         }
         else {
-          publish(String.format("Spieler %s hat geschlossen", spieler.getName()));
+          publishExcept(String.format("Spieler %s hat geschlossen", spieler.getName()), spieler);
           geschlossen = true;
           letzter = turn;
         }
       }
       else if (action == Action.CHECK) {
-        publish(String.format("Spieler %s hat geschoben", spieler.getName()));
+        publishExcept(String.format("Spieler %s hat geschoben", spieler.getName()), spieler);
         // do nothing
       }
       else if (action == Action.T11) {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte1(),
                 mitte.getKarte1()
-            )
+            ), spieler
         );
         mitte.setKarte1(spielerHand.setKarte1(mitte.getKarte1()));
       }
       else if (action == Action.T12) {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte1(),
                 mitte.getKarte2()
-            )
+            ), spieler
         );
         mitte.setKarte2(spielerHand.setKarte1(mitte.getKarte2()));
       }
       else if (action == Action.T13) {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte1(),
                 mitte.getKarte3()
-            )
+            ), spieler
         );
         mitte.setKarte3(spielerHand.setKarte1(mitte.getKarte3()));
       }
       else if (action == Action.T21) {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte2(),
                 mitte.getKarte1()
-            )
+            ), spieler
         );
         mitte.setKarte1(spielerHand.setKarte2(mitte.getKarte1()));
       }
       else if (action == Action.T22) {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte2(),
                 mitte.getKarte2()
-            )
+            ), spieler
         );
         mitte.setKarte2(spielerHand.setKarte2(mitte.getKarte2()));
       }
       else if (action == Action.T23) {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte2(),
                 mitte.getKarte3()
-            )
+            ), spieler
         );
         mitte.setKarte3(spielerHand.setKarte2(mitte.getKarte3()));
       }
       else if (action == Action.T31) {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte3(),
                 mitte.getKarte1()
-            )
+            ), spieler
         );
         mitte.setKarte1(spielerHand.setKarte3(mitte.getKarte1()));
       }
       else if (action == Action.T32) {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte3(),
                 mitte.getKarte2()
-            )
+            ), spieler
         );
         mitte.setKarte2(spielerHand.setKarte3(mitte.getKarte2()));
       }
       else {
-        publish(
+        publishExcept(
             String.format(
                 "Spieler %s tauscht seine Karte %s mit %s",
                 spieler.getName(),
                 spielerHand.getKarte3(),
                 mitte.getKarte3()
-            )
+            ), spieler
         );
         mitte.setKarte3(spielerHand.setKarte3(mitte.getKarte3()));
       }
 
       turn = (turn + 1) % spielerMap.size();
+      publish("");
     }
 
     publish("Runde vorbei");
-    publish("Ermittle Gewinner:");
 
-    float punkte = 0;
-    List<Spieler> gewinner = new ArrayList<>();
-
-    for (int i = 0; i < spielerMap.size(); i++) {
-      Spieler Stmp = spielerMap.get(i).getFirst();
-      Hand Htmp = spielerMap.get(i).getSecond();
-      float Ptmp = Helper.getPunkte(Htmp);
-
-      if (Ptmp > punkte) {
-        gewinner = new ArrayList<>();
-        gewinner.add(Stmp);
-        punkte = Ptmp;
-      }
-      else if (Ptmp == punkte) {
-        gewinner.add(Stmp);
-      }
-    }
-
-    publish(Arrays.toString(gewinner.toArray()));
-    publish("Punkte: " + punkte);
+    getResultsAndPublish();
 
   }
-  
-  private void publish(String string) {
+
+  private void getResultsAndPublish() {
+    publish("Ermittle Punkte");
+
+    Map<Spieler, Float> ergebnisse = new HashMap<>();
+
+    for (int i = 0; i < spielerMap.size(); i++) {
+      Spieler spieler = spielerMap.get(i).getFirst();
+      Hand hand = spielerMap.get(i).getSecond();
+      float punkte = Helper.getPunkte(hand);
+
+      ergebnisse.put(spieler, punkte);
+    }
+
+    for (Entry<Spieler, Float> entry : ergebnisse.entrySet()) {
+      publish(String.format("Spieler '%s' hat %.1f Punkte", entry.getKey(), entry.getValue()));
+    }
+  }
+
+  private void publishExcept(String string, Spieler except) {
     for (Paar<Spieler, Hand> spielerHandPaar : spielerMap.values()) {
+      if (spielerHandPaar.getFirst().equals(except)) {
+        continue;
+      }
       spielerHandPaar.getFirst().notify(string);
     }
+  }
+
+  private void publish(String string) {
+    publishExcept(string, null);
   }
 
   private void initGame() {
@@ -209,13 +221,18 @@ public class Spiel {
 
     mitte = new Hand(stapel.getKarte(), stapel.getKarte(), stapel.getKarte());
 
-    publish(String.format("Spieler %s ist dran", spieler.getName()));
+    publish(String.format("Spieler %s beginnt", spieler.getName()));
 
     Decision entscheidung = spieler.getDecision(spielerHand.getKarten());
 
     if (entscheidung == Decision.NO) {
       spielerMap.get(turn).setSecond(mitte);
       mitte = spielerHand;
+      publishExcept(String.format("Spieler %s hat seine Karten getauscht", spieler), spieler);
     }
+    else {
+      publishExcept(String.format("Spieler %s hat seine Karten behalten", spieler), spieler);
+    }
+    publish("");
   }
 }
